@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class GoogleSearchPageTest extends WebDriverTestBase{
+
     @Test
     public void searchTest() {
         driver.get("https://www.google.com.ua");

@@ -13,7 +13,7 @@ public abstract class WebDriverTestBase {
     @BeforeClass
     public void setUp() {
         System.setProperty("webdriver.gecko.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\javacore\\src\\geckodriver.exe");
-        WebDriver driver = new FirefoxDriver();
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
