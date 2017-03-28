@@ -15,7 +15,8 @@ public abstract class WebDriverTestBase {
     public void setUp() {
         //System.setProperty("webdriver.gecko.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\javacore\\src\\geckodriver.exe");
         //driver = new FirefoxDriver();
-        System.setProperty("webdriver.chrome.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\seleniumPractice\\src\\chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\seleniumPractice\\src\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "/home/alexandr/Dropbox/Documents/Books/QA/QA_automation/GitHub/seleniumPractice/src/chromedriver");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
