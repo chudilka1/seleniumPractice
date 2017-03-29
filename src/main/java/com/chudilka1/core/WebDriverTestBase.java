@@ -25,7 +25,7 @@ public abstract class WebDriverTestBase {
     @AfterClass
     public void tearDown() {
         //driver.close(); //closes tab
-        driver.quit(); //closes browser
+        //driver.quit(); //closes browser
     }
 
 }

@@ -1,7 +1,8 @@
 package com.chudilka1.customwritings;
 
 import com.chudilka1.core.WebDriverTestBase;
-import com.chudilka1.pages.customwritings.RCForm;
+import com.chudilka1.pages.customwritings.RCFormPage;
+import com.sun.org.glassfish.gmbal.Description;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +19,7 @@ public class RCFormTest extends WebDriverTestBase {
     By englishLiterature = By.cssSelector("#react-select-4--option-1");
     By disciplineSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[3]");
     By topicSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__order-topic");
+    By instructionsLocator = By.cssSelector(".UIInput.UIInput-default.UIInput-default--type-textarea.UIInput-default--size-m.UIInput-default--color-default.UIInput-default--autosize.UIInput-default--not-resizable");
     By uploadedFileLocator = By.cssSelector(".FormFile");
     By apaFormatLocator = By.xpath(".//*[@id='root']/div/div/div[1]/div[3]/div/div[1]/div[2]/div[7]/div[2]/div/div/div/div[1]/div[2]/button");
 
@@ -25,6 +27,9 @@ public class RCFormTest extends WebDriverTestBase {
     By deadline5DaysLocator = By.xpath("//*[@id='root']/div/div/div[1]/div[3]/div/div[2]/div[2]/div[1]/div[2]/div/div[1]/div/div[1]/div[5]/button");
     By estimateDeadlineDateLocator = By.cssSelector(".DeadlineControl__estimated-deadline__date");
     By pagesSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__invoice__item__heading");
+    By pagesPriceSideWindowLocator = By.tagName("nobr");
+    By chosenPaymentMethodSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
+    By totalPriceSideWindowLocator = By.xpath(".//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[3]/div[2]/div[2]");
 
     //Account
     By emailLocator = By.name("email");
@@ -33,8 +38,9 @@ public class RCFormTest extends WebDriverTestBase {
     By succesfullSignInLocator = By.cssSelector(".rc-message.success.plate");
 
     @Test
+    @Description("Оформление ордера без Complex Assignment, презентаций, таблиц, допсервисов + существующий пользователь")
     public void submitOrderForm() {
-        RCForm rcForm = new RCForm("https://customwritings.com/order.html",driver);
+        RCFormPage rcForm = new RCFormPage("https://customwritings.com/order.html",driver);
         rcForm.open();
         Assert.assertEquals(driver.getTitle(), "Order now | Custom Written Essays, Term Papers, Research Papers, Thesis Papers, Dissertation and more");
         rcForm.chooseAcademicLevel(university34Locator);
@@ -46,6 +52,7 @@ public class RCFormTest extends WebDriverTestBase {
         rcForm.typeTopic("TESTING ORDER!!!");
         Assert.assertEquals(driver.findElement(topicSideWindowLocator).getText().trim(), "TESTING ORDER!!!");
         rcForm.typeInstructions("@TeSt \"yes\" 'no' / *b* ; select fid; ТеСт </br> eNd of' $string -");
+        Assert.assertEquals(driver.findElement(instructionsLocator).getText().trim(), "@TeSt \"yes\" 'no' / *b* ; select fid; ТеСт </br> eNd of' $string -");
         rcForm.uploadAddMaterials("/home/alexandr/Desktop/array.txt");
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.visibilityOfElementLocated(uploadedFileLocator));
@@ -57,6 +64,7 @@ public class RCFormTest extends WebDriverTestBase {
         Assert.assertNotEquals(initialDeadline, expectedDeadline);
         rcForm.typeNumberOfPages("10");
         Assert.assertTrue(driver.findElement(pagesSideWindowLocator).getText().trim().startsWith("10"));
+        Assert.assertTrue(driver.findElement(pagesPriceSideWindowLocator).getText().trim().contains("190.00"));
         rcForm.switchToReturningCustomerTab();
         Assert.assertTrue(driver.findElement(forgotPasswordLocator).isDisplayed());
         rcForm.typeEmail("test.yepishev@gmail.com");
@@ -65,5 +73,9 @@ public class RCFormTest extends WebDriverTestBase {
         Assert.assertTrue(driver.findElement(passwordLocator).getAttribute("value").equals("testyepishev"));
         rcForm.signIn();
         Assert.assertTrue(driver.findElement(succesfullSignInLocator).getText().contains("test.yepishev@gmail.com"));
+        Assert.assertTrue(driver.findElement(totalPriceSideWindowLocator).getText().trim().contains("190.00")); //checks total price
+        rcForm.choosePayment("Credit Card");
+        Assert.assertTrue(driver.findElement(chosenPaymentMethodSideWindowLocator).getAttribute("title").trim().contains("Gate2Shop"));
+        //rcForm.submitOrder();
     }
 }
