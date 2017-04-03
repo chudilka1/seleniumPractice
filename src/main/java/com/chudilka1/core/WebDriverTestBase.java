@@ -13,17 +13,20 @@ public abstract class WebDriverTestBase {
 
     @BeforeClass
     public void setUp() {
-        //System.setProperty("webdriver.gecko.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\javacore\\src\\geckodriver.exe");
+        //System.setProperty("webdriver.gecko.driver", WebDriverTestBase.class.getClassLoader().getResource("geckodriver.exe").getPath());
         //driver = new FirefoxDriver();
-        //System.setProperty("webdriver.chrome.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\seleniumPractice\\src\\chromedriver.exe");
-        System.setProperty("webdriver.chrome.driver", "/home/alexandr/Dropbox/Documents/Books/QA/QA_automation/GitHub/seleniumPractice/src/chromedriver");
+        //System.setProperty("webdriver.chrome.driver", WebDriverTestBase.class.getClassLoader().getResource("chromedriver.exe").getPath());
+        System.setProperty("webdriver.chrome.driver", WebDriverTestBase.class.getClassLoader().getResource("chromedriver").getPath());
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS);
+        driver.manage().timeouts().setScriptTimeout(40, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     @AfterClass
     public void tearDown() {
+        //driver.manage().deleteAllCookies();
         //driver.close(); //closes tab
         //driver.quit(); //closes browser
     }

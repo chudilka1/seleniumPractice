@@ -4,78 +4,55 @@ import com.chudilka1.core.WebDriverTestBase;
 import com.chudilka1.pages.customwritings.RCFormPage;
 import com.sun.org.glassfish.gmbal.Description;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import org.testng.Assert;
 
+import java.util.List;
+
 public class RCFormTest extends WebDriverTestBase {
-    //Paper details
-    By university34Locator = By.cssSelector(".radio-button.radio-button--n-3");
-    By academicLevelSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]");
-    By researchPaperLocator = By.cssSelector("#react-select-3--option-2");
-    By typeOfPaperSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[2]");
-    By englishLiterature = By.cssSelector("#react-select-4--option-1");
-    By disciplineSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[3]");
-    By topicSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__order-topic");
-    By instructionsLocator = By.cssSelector(".UIInput.UIInput-default.UIInput-default--type-textarea.UIInput-default--size-m.UIInput-default--color-default.UIInput-default--autosize.UIInput-default--not-resizable");
-    By uploadedFileLocator = By.cssSelector(".FormFile");
-    By apaFormatLocator = By.xpath(".//*[@id='root']/div/div/div[1]/div[3]/div/div[1]/div[2]/div[7]/div[2]/div/div/div/div[1]/div[2]/button");
-
-    //Price calculation
-    By deadline5DaysLocator = By.xpath("//*[@id='root']/div/div/div[1]/div[3]/div/div[2]/div[2]/div[1]/div[2]/div/div[1]/div/div[1]/div[5]/button");
-    By estimateDeadlineDateLocator = By.cssSelector(".DeadlineControl__estimated-deadline__date");
-    By pagesSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__invoice__item__heading");
-    By pagesPriceSideWindowLocator = By.tagName("nobr");
-    By chosenPaymentMethodSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
-    By totalPriceSideWindowLocator = By.xpath(".//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[3]/div[2]/div[2]");
-
-    //Account
-    By emailLocator = By.name("email");
-    By passwordLocator = By.name("password");
-    By forgotPasswordLocator = By.cssSelector(".Auth__link");
-    By succesfullSignInLocator = By.cssSelector(".rc-message.success.plate");
 
     @Test
     @Description("Оформление ордера без Complex Assignment, презентаций, таблиц, допсервисов + существующий пользователь")
     public void submitOrderForm() {
-        RCFormPage rcForm = new RCFormPage("https://customwritings.com/order.html",driver);
-        rcForm.open();
-        Assert.assertEquals(driver.getTitle(), "Order now | Custom Written Essays, Term Papers, Research Papers, Thesis Papers, Dissertation and more");
-        rcForm.chooseAcademicLevel(university34Locator);
-        Assert.assertEquals(driver.findElement(academicLevelSideWindowLocator).getText().trim(), "Undergrad. (yrs 3-4)");
-        rcForm.chooseTypeOfPaper(researchPaperLocator);
-        Assert.assertEquals(driver.findElement(typeOfPaperSideWindowLocator).getText().trim(), "Research paper");
-        rcForm.chooseNonCADiscipline(englishLiterature);
-        Assert.assertEquals(driver.findElement(disciplineSideWindowLocator).getText().trim(), "Classic English Literature");
-        rcForm.typeTopic("TESTING ORDER!!!");
-        Assert.assertEquals(driver.findElement(topicSideWindowLocator).getText().trim(), "TESTING ORDER!!!");
-        rcForm.typeInstructions("@TeSt \"yes\" 'no' / *b* ; select fid; ТеСт </br> eNd of' $string -");
-        Assert.assertEquals(driver.findElement(instructionsLocator).getText().trim(), "@TeSt \"yes\" 'no' / *b* ; select fid; ТеСт </br> eNd of' $string -");
-        rcForm.uploadAddMaterials("/home/alexandr/Desktop/array.txt");
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(uploadedFileLocator));
-        rcForm.choosePaperFormat(apaFormatLocator);
-        Assert.assertEquals(driver.findElement(apaFormatLocator).getText().trim(), "APA");
-        String initialDeadline = driver.findElement(estimateDeadlineDateLocator).getText(); //gets estimated deadline before changing value
-        rcForm.chooseDeadline(deadline5DaysLocator);
-        String expectedDeadline = driver.findElement(estimateDeadlineDateLocator).getText();
-        Assert.assertNotEquals(initialDeadline, expectedDeadline);
-        rcForm.typeNumberOfPages("10");
-        Assert.assertTrue(driver.findElement(pagesSideWindowLocator).getText().trim().startsWith("10"));
-        Assert.assertTrue(driver.findElement(pagesPriceSideWindowLocator).getText().trim().contains("190.00"));
-        rcForm.switchToReturningCustomerTab();
-        Assert.assertTrue(driver.findElement(forgotPasswordLocator).isDisplayed());
-        rcForm.typeEmail("test.yepishev@gmail.com");
-        Assert.assertTrue(driver.findElement(emailLocator).getAttribute("value").equals("test.yepishev@gmail.com"));
-        rcForm.typePassword("testyepishev");
-        Assert.assertTrue(driver.findElement(passwordLocator).getAttribute("value").equals("testyepishev"));
-        rcForm.signIn();
-        Assert.assertTrue(driver.findElement(succesfullSignInLocator).getText().contains("test.yepishev@gmail.com"));
-        Assert.assertTrue(driver.findElement(totalPriceSideWindowLocator).getText().trim().contains("190.00")); //checks total price
-        rcForm.choosePayment("Credit Card");
-        Assert.assertTrue(driver.findElement(chosenPaymentMethodSideWindowLocator).getAttribute("title").trim().contains("Gate2Shop"));
+        RCFormPage rcForm = new RCFormPage("https://customwritings.com/order.html", driver);
+        rcForm.open()
+                .checkPage("Order now | Custom Written Essays, Term Papers, Research Papers, Thesis Papers, Dissertation and more");
+
+        //Filling up 'Paper Details'
+        rcForm.chooseAcademicLevel("Undergraduate 3 4")
+                .checkAcademicLevel("Undergrad. (yrs 3-4)")
+                .chooseTypeOfPaper("Research Paper")
+                .checkTypeOfPaper("Research paper")
+                .chooseNonCADiscipline("English literature")
+                .checkDiscipline("Classic English Literature")
+                .typeTopic("TESTING ORDER!!!")
+                .checkTopic("TESTING ORDER!!!")
+                .typeInstructions("@TeSt \"yes\" 'no' / *b* ; select fid; ТеСт </br> eNd of' $string -")
+                .uploadAddMaterials("uploadMaterial1.txt")
+                .checkUploadedMaterials()
+                .choosePaperFormat("Other", "my custom format");
+
+        //Filling up 'Price calculation'
+        rcForm.chooseDeadline("5 days")
+                .checkDeadline()
+                .typeNumberOfPages("10")
+                .checkPagesAndPrice("10", "190");
+
+        //Filling up 'Account'
+        rcForm.switchToReturningCustomerTab()
+                .isReturningCustomerPage()
+                .loginAsUser("test.yepishev@gmail.com", "testyepishev")
+                .isLoggedIn("test.yepishev@gmail.com");
+
+        //Choosing payment system
+        rcForm.checkTotal("190.00")
+                .choosePayment("Credit Card")
+                .checkChosenPayment("Gate2Shop");
+
         //rcForm.submitOrder();
     }
 }
