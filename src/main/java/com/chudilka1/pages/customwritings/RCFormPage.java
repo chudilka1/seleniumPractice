@@ -3,14 +3,10 @@ package com.chudilka1.pages.customwritings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.io.File;
-import java.util.List;
 
 public class RCFormPage extends AbstractPage {
 
@@ -103,19 +99,19 @@ public class RCFormPage extends AbstractPage {
         academicLevel = academicLevel.toLowerCase().replaceAll("\\s+","");
         switch (academicLevel) {
             case "highschool":
-                driver.findElement(highSchoolLocator).click();
+                click(highSchoolLocator);
                 break;
             case "undergraduate12":
-                driver.findElement(undegrad12Locator).click();
+                click(undegrad12Locator);
                 break;
             case "undergraduate34":
-                driver.findElement(undergrad34Locator).click();
+                click(undergrad34Locator);
                 break;
             case "masters":
-                driver.findElement(mastersLocator).click();
+                click(mastersLocator);
                 break;
             case "phd":
-                driver.findElement(phDLocator).click();
+                click(phDLocator);
                 break;
             default:
                 System.out.println("Entered Academic Level is not supported");
@@ -124,16 +120,17 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkAcademicLevel(String expectedResult){
-        Assert.assertEquals(driver.findElement(academicLevelSideWindowLocator).getText().trim(), expectedResult);
+        Assert.assertEquals(getTextFromElement(academicLevelSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
     public RCFormPage chooseTypeOfPaper(String typeOfPaper) {
         typeOfPaper = typeOfPaper.toLowerCase().trim();
-        driver.findElement(typeOfPaperLocator).click();
+        click(typeOfPaperLocator);
+        //в случае необходимости добавить различные типы рефератов
         switch (typeOfPaper) {
             case "research paper":
-                driver.findElement(researchPaper).click();
+                click(researchPaper);
                 break;
             default:
                 System.out.println("Entered Type of Paper is not supported");
@@ -142,16 +139,17 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkTypeOfPaper(String expectedResult) {
-        Assert.assertEquals(driver.findElement(typeOfPaperSideWindowLocator).getText().trim(), expectedResult);
+        Assert.assertEquals(getTextFromElement(typeOfPaperSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
     public RCFormPage chooseNonCADiscipline(String discipline) {
         discipline = discipline.toLowerCase().trim();
-        driver.findElement(disciplineLocator).click();
+        click(disciplineLocator);
+        //в случае необходимости добавить новые дисциплины
         switch (discipline) {
             case "english literature":
-                driver.findElement(englishLiterature).click();
+                click(englishLiterature);
                 break;
             default:
                 System.out.println("Entered Discipline is not supported");
@@ -160,7 +158,7 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkDiscipline(String expectedResult) {
-        Assert.assertEquals(driver.findElement(disciplineSideWindowLocator).getText().trim(), expectedResult);
+        Assert.assertEquals(getTextFromElement(disciplineSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
@@ -170,7 +168,7 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkTopic(String expectedResult) {
-        Assert.assertEquals(driver.findElement(topicSideWindowLocator).getText().trim(), expectedResult);
+        Assert.assertEquals(getTextFromElement(topicSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
@@ -195,19 +193,19 @@ public class RCFormPage extends AbstractPage {
         paperFormat = paperFormat.toLowerCase().trim();
         switch (paperFormat) {
             case "mla":
-                driver.findElement(mlaFormatLocator).click();
+                click(mlaFormatLocator);
                 break;
             case "apa":
-                driver.findElement(apaFormatLocator).click();
+                click(apaFormatLocator);
                 break;
             case "chicago":
-                driver.findElement(chicagoFormatLocator).click();
+                click(chicagoFormatLocator);
                 break;
             case "not applicable":
-                driver.findElement(notApplicableLocator).click();
+                click(notApplicableLocator);
                 break;
             case "other":
-                driver.findElement(otherFormatLocator).click();
+                click(otherFormatLocator);
                 webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfElementLocated(customFormatFieldLocator));
                 typeText(customFormatFieldLocator, customFormat);
                 break;
@@ -217,7 +215,7 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
-    //необходимо добавить id для кнопок и статус active, если нажата, изменить локаторы
+    //необходимо добавить id для кнопок, возможно делать проверку нажата ли кнопка (статус active, если нажата, изменить локаторы)
     /*public RCFormPage checkPaperFormat(String expectedResult, String expectedComment) {
         expectedResult = expectedResult.toLowerCase().trim();
         switch (expectedResult) {
@@ -246,28 +244,28 @@ public class RCFormPage extends AbstractPage {
         deadline = deadline.toLowerCase().trim();
         switch (deadline) {
             case "8 hours":
-                driver.findElement(dealine8Hours).click();
+                click(dealine8Hours);
                 break;
             case "24 hours":
-                driver.findElement(dealine24Hours).click();
+                click(dealine24Hours);
                 break;
             case "48 hours":
-                driver.findElement(dealine48Hours).click();
+                click(dealine48Hours);
                 break;
             case "3 days":
-                driver.findElement(deadline3Days).click();
+                click(deadline3Days);
                 break;
             case "5 days":
-                driver.findElement(deadline5Days).click();
+                click(deadline5Days);
                 break;
             case "7 days":
-                driver.findElement(deadline7Days).click();
+                click(deadline7Days);
                 break;
             case "14 days":
-                driver.findElement(deadline14Days).click();
+                click(deadline14Days);
                 break;
             case "30 days":
-                driver.findElement(deadline30Days).click();
+                click(deadline30Days);
                 break;
             default:
                 System.out.println("Entered Deadline is not supported");
@@ -276,7 +274,7 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkDeadline() {
-        String expectedDeadline = getTextFromElemnt(estimateDeadlineDateLocator);
+        String expectedDeadline = getTextFromElement(estimateDeadlineDateLocator);
         Assert.assertNotEquals(initialDeadline, expectedDeadline);
         return this;
     }
@@ -287,8 +285,8 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkPagesAndPrice(String pages, String price) {
-        Assert.assertTrue(getTextFromElemnt(pagesSideWindowLocator).startsWith(pages));
-        Assert.assertTrue(getTextFromElemnt(pagesPriceSideWindowLocator).contains(price));
+        Assert.assertTrue(getTextFromElement(pagesSideWindowLocator).startsWith(pages));
+        Assert.assertTrue(getTextFromElement(pagesPriceSideWindowLocator).contains(price));
         return this;
     }
 
@@ -311,12 +309,12 @@ public class RCFormPage extends AbstractPage {
 
     public RCFormPage isLoggedIn(String email) {
         webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfElementLocated(succesfullSignInLocator));
-        Assert.assertTrue(getTextFromElemnt(succesfullSignInLocator).contains(email));
+        Assert.assertTrue(getTextFromElement(succesfullSignInLocator).contains(email));
         return this;
     }
 
     public RCFormPage checkTotal(String expectedResult) {
-        Assert.assertTrue(getTextFromElemnt(totalPriceSideWindowLocator).contains(expectedResult));
+        Assert.assertTrue(getTextFromElement(totalPriceSideWindowLocator).contains(expectedResult));
         return this;
     }
 

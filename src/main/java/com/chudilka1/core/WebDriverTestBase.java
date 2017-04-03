@@ -14,9 +14,9 @@ public abstract class WebDriverTestBase {
     @BeforeClass
     public void setUp() {
         //System.setProperty("webdriver.gecko.driver", WebDriverTestBase.class.getClassLoader().getResource("geckodriver.exe").getPath());
-        //driver = new FirefoxDriver();
         //System.setProperty("webdriver.chrome.driver", WebDriverTestBase.class.getClassLoader().getResource("chromedriver.exe").getPath());
         System.setProperty("webdriver.chrome.driver", WebDriverTestBase.class.getClassLoader().getResource("chromedriver").getPath());
+        //driver = new FirefoxDriver();
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS);

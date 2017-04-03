@@ -25,7 +25,7 @@ public class AbstractPage {
         button.click();
     }
 
-    public String getTextFromElemnt(By elementId){
+    public String getTextFromElement(By elementId){
         WebElement element = driver.findElement(elementId);
         return element.getText().trim();
     }
