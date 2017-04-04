@@ -3,15 +3,7 @@ package com.chudilka1.customwritings;
 import com.chudilka1.core.WebDriverTestBase;
 import com.chudilka1.pages.customwritings.RCFormPage;
 import com.sun.org.glassfish.gmbal.Description;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
-
-import org.testng.Assert;
-
-import java.util.List;
 
 public class RCFormTest extends WebDriverTestBase {
 
@@ -20,7 +12,7 @@ public class RCFormTest extends WebDriverTestBase {
     public void submitOrderForm() {
         RCFormPage rcForm = new RCFormPage("https://customwritings.com/order.html", driver);
         rcForm.open()
-                .checkPage("Order now | Custom Written Essays, Term Papers, Research Papers, Thesis Papers, Dissertation and more");
+                .checkPage("Order now");
 
         //Filling up 'Paper Details'
         rcForm.chooseAcademicLevel("Undergraduate 3 4")

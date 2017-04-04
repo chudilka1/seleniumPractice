@@ -64,11 +64,6 @@ public class RCFormPage extends AbstractPage {
     private By signInButtonLocator = By.cssSelector(".UIButton.UIButton-default-ghost.UIButton-default-ghost--size-l.UIButton-default-ghost--color-primary.UIButton-default-ghost--accent");
     private By succesfullSignInLocator = By.cssSelector(".rc-message.success.plate");
 
-    private By paymentMenuSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
-    private By payPalLocator = By.cssSelector(".payment-method-icon.payment-method-icon--g2s_paypal");
-    private By creditCardLocator = By.cssSelector(".payment-method-icon.payment-method-icon--gate2shop");
-    private By skrillLocator = By.cssSelector(".payment-method-icon.payment-method-icon--skrill");
-
     //SIDE WINDOW LOCATORS
     private By academicLevelSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]");
     private By typeOfPaperSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[2]/div[2]");
@@ -79,6 +74,11 @@ public class RCFormPage extends AbstractPage {
     private By totalPriceSideWindowLocator = By.xpath(".//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[3]/div[2]/div[2]");
     private By payButtonSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__checkout-button.UIButton.UIButton-default-filled.UIButton-default-filled--size-l.UIButton-default-filled--color-primary");
     private By chosenPaymentMethodSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
+    private By paymentMenuSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
+    private By payPalLocator = By.cssSelector(".payment-method-icon.payment-method-icon--g2s_paypal");
+    private By creditCardLocator = By.cssSelector(".payment-method-icon.payment-method-icon--gate2shop");
+    private By skrillLocator = By.cssSelector(".payment-method-icon.payment-method-icon--skrill");
+    private By paymentMenuHolderSideWindowLocator = By.xpath("//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[4]/div/div/div[2]");
 
     public RCFormPage(String url, WebDriver driver) {
         super(driver);
@@ -91,7 +91,7 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage checkPage(String pageTitle) {
-        Assert.assertEquals(driver.getTitle(), pageTitle);
+        Assert.assertTrue(driver.getTitle().contains(pageTitle));
         return this;
     }
 
@@ -178,7 +178,7 @@ public class RCFormPage extends AbstractPage {
     }
 
     public RCFormPage uploadAddMaterials(String fileName) {
-        File file = new File("src/main/resources/RCForm/" + fileName);
+        File file = new File("src/test/resources/RCForm/" + fileName);
         String filePath = file.getAbsolutePath();
         driver.findElement(uploadAddMaterialsLocator).sendKeys(filePath);
         return this;
@@ -320,6 +320,7 @@ public class RCFormPage extends AbstractPage {
 
     public RCFormPage choosePayment(String paymentSystem) {
         click(paymentMenuSideWindowLocator);
+        webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfAllElementsLocatedBy(paymentMenuHolderSideWindowLocator));
         paymentSystem = paymentSystem.toLowerCase().replaceAll("\\s+","");
         switch (paymentSystem) {
             case "paypal":
