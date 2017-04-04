@@ -48,16 +48,6 @@ public abstract class WebDriverTestBase {
                 System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_UNIX)));
             }
         }
-        /*if (isBrowserSetUpFor(BrowsersName.CHROME.name(), BROWSER)) {
-            System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_WIN)));
-        } else if (isBrowserSetUpFor(BrowsersName.FIREFOX.name(), BROWSER)) {
-            System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_WIN)));
-            if (isWindows()) {
-                System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_WIN)));
-            } else if (isUnix()) {
-                System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_UNIX)));
-            }
-        }*/
         initializeWebDriver();
     }
 
@@ -79,6 +69,8 @@ public abstract class WebDriverTestBase {
 
     @AfterClass
     public void tearDown() {
+        //driver.manage().deleteAllCookies();
+        //driver.manage().deleteAllCookies();
         //driver.quit();
     }
 
@@ -87,10 +79,12 @@ public abstract class WebDriverTestBase {
     }
 
     private boolean isWindows() {
+        //return windowsOSCodes.contains(OS);
         return OS.contains("win");
     }
 
     private boolean isUnix() {
+        //return unixOSCodes.contains(OS);
         return OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
     }
 
@@ -104,8 +98,8 @@ public abstract class WebDriverTestBase {
         if (url != null) {
             path = url.getPath();
         } else {
-            //LOG.error("Not found resource");
-            System.out.println("Not found resource");
+            //LOG.error("Resource not found");
+            System.out.println("Resource not found");
         }
         return path;
     }
