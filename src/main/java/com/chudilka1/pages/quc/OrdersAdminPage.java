@@ -1,6 +1,7 @@
 package com.chudilka1.pages.quc;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -74,5 +75,10 @@ public class OrdersAdminPage extends AbstractPage {
         Assert.assertTrue(getTextFromElement(statusInTableLocator).equals(expectedResult)||
                 driver.findElement(orderIDinTableLocator).getAttribute("order-id").trim().equals(expectedResult));
         return this;
+    }
+
+    public NewPaidPage openOrder(){
+        driver.findElement(orderIDinTableLocator).sendKeys(Keys.ENTER);
+        return new NewPaidPage(driver);
     }
 }
