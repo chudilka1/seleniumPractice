@@ -16,6 +16,7 @@ public class GoogleResultPage extends AbstractPage{
         super(driver);
         PageFactory.initElements(driver, this);
     }
+
     public WebElement findLink(){
         webDriverUtils.waitForExpectedCondition(
                 ExpectedConditions.visibilityOf(seleniumLink));
