@@ -16,7 +16,4 @@ public class GoogleResultPageTest extends WebDriverTestBase {
         page.sendSearchData(searchData);
         page.findLink();
     }
-
-
-
 }

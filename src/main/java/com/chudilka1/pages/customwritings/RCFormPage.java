@@ -5,6 +5,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Step;
+import ru.yandex.qatools.allure.annotations.Title;
 
 import java.io.File;
 
@@ -57,11 +60,11 @@ public class RCFormPage extends AbstractPage {
     private By pagesInoutLocator = By.xpath("//*[@id='root']/div/div/div[1]/div[3]/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[1]/div/div/input");
 
     //ACCOUNT
-    private By returningCustomerTabLocator = By.xpath("//*[@id='root']/div/div/div[1]/div[3]/div/div[3]/div[2]/div/div[1]/button[2]");
+    private By returningCustomerTabLocator = By.xpath(".//*[@id='root']/div/div/div[1]/div[3]/div/div[3]/div[2]/div/div[1]/button[2]");
     private By forgotPasswordLocator = By.cssSelector(".Auth__link");
     private By emailLocator = By.name("email");
     private By passwordLocator = By.name("password");
-    private By signInButtonLocator = By.cssSelector(".UIButton.UIButton-default-ghost.UIButton-default-ghost--size-l.UIButton-default-ghost--color-primary.UIButton-default-ghost--accent");
+    private By signInButtonLocator = By.xpath(".//*[@id='root']/div/div/div[1]/div[3]/div/div[3]/div[2]/div/div[2]/form/div/div[3]/button");
     private By succesfullSignInLocator = By.cssSelector(".rc-message.success.plate");
 
     //SIDE WINDOW LOCATORS
@@ -85,16 +88,19 @@ public class RCFormPage extends AbstractPage {
         this.url = url;
     }
 
+    @Step("Открытие страницы")
     public RCFormPage open() {
         driver.get(url);
         return this;
     }
 
+    @Step("Проверка: открытая страница - {0}")
     public RCFormPage checkPage(String pageTitle) {
         Assert.assertTrue(driver.getTitle().contains(pageTitle));
         return this;
     }
 
+    @Step("Выбор академического уровня - {0}")
     public RCFormPage chooseAcademicLevel(String academicLevel) {
         academicLevel = academicLevel.toLowerCase().replaceAll("\\s+","");
         switch (academicLevel) {
@@ -119,11 +125,13 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: выбранный кадемический уровень - {0}")
     public RCFormPage checkAcademicLevel(String expectedResult){
         Assert.assertEquals(getTextFromElement(academicLevelSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
+    @Step("Выбор типа реферата - {0}")
     public RCFormPage chooseTypeOfPaper(String typeOfPaper) {
         typeOfPaper = typeOfPaper.toLowerCase().trim();
         click(typeOfPaperLocator);
@@ -138,11 +146,13 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: тип реферата - {0}")
     public RCFormPage checkTypeOfPaper(String expectedResult) {
         Assert.assertEquals(getTextFromElement(typeOfPaperSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
+    @Step("Выбор дисциплины - {0}")
     public RCFormPage chooseNonCADiscipline(String discipline) {
         discipline = discipline.toLowerCase().trim();
         click(disciplineLocator);
@@ -157,26 +167,31 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: выбранная дисциплина - {0}")
     public RCFormPage checkDiscipline(String expectedResult) {
         Assert.assertEquals(getTextFromElement(disciplineSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
+    @Step("Ввод темы - {0}")
     public RCFormPage typeTopic(String topic) {
         typeText(topicLocator, topic);
         return this;
     }
 
+    @Step("Проверка: введенная тема - {0}")
     public RCFormPage checkTopic(String expectedResult) {
         Assert.assertEquals(getTextFromElement(topicSideWindowLocator).trim(), expectedResult);
         return this;
     }
 
+    @Step("Ввод инструкций")
     public RCFormPage typeInstructions(String instructions) {
         typeText(instructionsLocator, instructions);
         return this;
     }
 
+    @Step("Подгрузка материалов")
     public RCFormPage uploadAddMaterials(String fileName) {
         File file = new File("src/test/resources/RCForm/" + fileName);
         String filePath = file.getAbsolutePath();
@@ -184,11 +199,13 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: материалы подгружены")
     public RCFormPage checkUploadedMaterials(){
         webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfElementLocated(uploadedFileLocator));
         return this;
     }
 
+    @Step("Выбор формата работы")
     public RCFormPage choosePaperFormat(String paperFormat, String customFormat) {
         paperFormat = paperFormat.toLowerCase().trim();
         switch (paperFormat) {
@@ -239,6 +256,7 @@ public class RCFormPage extends AbstractPage {
         return this;
     }*/
 
+    @Step("Выбор дедлайна - {0}")
     public RCFormPage chooseDeadline(String deadline) {
         initialDeadline = driver.findElement(estimateDeadlineDateLocator).getText();
         deadline = deadline.toLowerCase().trim();
@@ -273,33 +291,39 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: изменение дедлайна")
     public RCFormPage checkDeadline() {
         String expectedDeadline = getTextFromElement(estimateDeadlineDateLocator);
         Assert.assertNotEquals(initialDeadline, expectedDeadline);
         return this;
     }
 
+    @Step("Выбор {0} страниц")
     public RCFormPage typeNumberOfPages(String pages) {
         typeText(pagesInoutLocator, pages);
         return this;
     }
 
+    @Step("Проверка: количество страниц - {0}, стоимость - {1}")
     public RCFormPage checkPagesAndPrice(String pages, String price) {
         Assert.assertTrue(getTextFromElement(pagesSideWindowLocator).startsWith(pages));
         Assert.assertTrue(getTextFromElement(pagesPriceSideWindowLocator).contains(price));
         return this;
     }
 
+    @Step("Переход на вкладку 'Returning customer'")
     public RCFormPage switchToReturningCustomerTab() {
         click(returningCustomerTabLocator);
         return this;
     }
 
+    @Step("Проверка: вкладке 'Returning Customer'")
     public RCFormPage isReturningCustomerPage() {
         Assert.assertTrue(driver.findElement(forgotPasswordLocator).isDisplayed());
         return this;
     }
 
+    @Step("Вход пользователя")
     public RCFormPage loginAsUser(String email, String password) {
         typeText(emailLocator, email);
         typeText(passwordLocator, password);
@@ -307,17 +331,20 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Залогирован: отображается - {0}")
     public RCFormPage isLoggedIn(String email) {
         webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfElementLocated(succesfullSignInLocator));
         Assert.assertTrue(getTextFromElement(succesfullSignInLocator).contains(email));
         return this;
     }
 
+    @Step("Проверка: итоговая стоимость - {0}")
     public RCFormPage checkTotal(String expectedResult) {
         Assert.assertTrue(getTextFromElement(totalPriceSideWindowLocator).contains(expectedResult));
         return this;
     }
 
+    @Step("Выбор пеймент метода - {0}")
     public RCFormPage choosePayment(String paymentSystem) {
         click(paymentMenuSideWindowLocator);
         webDriverUtils.waitForExpectedCondition(ExpectedConditions.visibilityOfAllElementsLocatedBy(paymentMenuHolderSideWindowLocator));
@@ -338,11 +365,13 @@ public class RCFormPage extends AbstractPage {
         return this;
     }
 
+    @Step("Проверка: выбранный пеймент метод - {0}")
     public RCFormPage checkChosenPayment(String expectedResult) {
         Assert.assertTrue(driver.findElement(chosenPaymentMethodSideWindowLocator).getAttribute("title").trim().contains(expectedResult));
         return this;
     }
 
+    @Step("Проплата (To checkout)")
     public RCFormPage submitOrder() {
         driver.findElement(payButtonSideWindowLocator).click();
         return this;
