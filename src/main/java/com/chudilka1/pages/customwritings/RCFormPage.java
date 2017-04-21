@@ -111,7 +111,7 @@ public class RCFormPage extends AbstractPage {
                 click(undegrad12Locator);
                 break;
             case "undergraduate34":
-                click(undergrad34Locator);
+                jsClick(undergrad34Locator);
                 break;
             case "masters":
                 click(mastersLocator);

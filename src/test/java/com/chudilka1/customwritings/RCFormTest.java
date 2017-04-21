@@ -2,12 +2,14 @@ package com.chudilka1.customwritings;
 
 import com.chudilka1.core.WebDriverTestBase;
 import com.chudilka1.pages.customwritings.RCFormPage;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Severity;
 import ru.yandex.qatools.allure.annotations.Title;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
+@Listeners({com.chudilka1.core.TestListener.class})
 public class RCFormTest extends WebDriverTestBase {
 
     @Title("Заполнение RCForm")
@@ -48,8 +50,8 @@ public class RCFormTest extends WebDriverTestBase {
 
         //Choosing payment system
         rcForm.checkTotal("190.00")
-                .choosePayment("Credit Card")
-                .checkChosenPayment("Gate2Shop");
+                .choosePayment("skrill")
+                .checkChosenPayment("");
 
         //rcForm.submitOrder();
         //mvn clean install site jetty:run

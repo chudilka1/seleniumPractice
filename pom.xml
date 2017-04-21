@@ -72,8 +72,8 @@
                 </dependencies>
             </plugin>
 
-            <!--Needed only to show reports locally. Run jetty:run and
-             open localhost:8080 to show the report-->
+            <!--Needed only to show reports locally. Run 'mvn jetty:run' and
+             open http://localhost:8080 to show the report-->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>

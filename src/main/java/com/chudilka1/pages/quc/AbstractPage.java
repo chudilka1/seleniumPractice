@@ -2,12 +2,14 @@ package com.chudilka1.pages.quc;
 
 import com.chudilka1.util.WebDriverUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class AbstractPage {
     protected WebDriver driver;
     protected WebDriverUtils webDriverUtils;
+    protected JavascriptExecutor executor;
 
     //Authorization on 'Fish' page
     private String login = "aleksandr.yepishev";
@@ -40,6 +42,11 @@ public class AbstractPage {
     public void click(By elementId) {
         WebElement button = driver.findElement(elementId);
         button.click();
+    }
+
+    public void jsClick(WebElement element) {
+        executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", element);
     }
 
     public String getTextFromElement(By elementId){

@@ -1,6 +1,6 @@
 package com.chudilka1.core;
 
-public enum BrowsersName {
+public enum BrowserNames {
 
     CHROME, FIREFOX
 }

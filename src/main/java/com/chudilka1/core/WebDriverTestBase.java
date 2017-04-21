@@ -3,13 +3,14 @@ package com.chudilka1.core;
 import com.chudilka1.util.PropertiesCache;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.os.WindowsUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeSuite;
-
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -36,15 +37,15 @@ public abstract class WebDriverTestBase {
     @BeforeSuite
     public void setUp() {
         if (isWindows()) {
-            if (isBrowserSetUpFor(BrowsersName.CHROME.name(), BROWSER)) {
+            if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
                 System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_WIN)));
-            } else if (isBrowserSetUpFor(BrowsersName.FIREFOX.name(), BROWSER)) {
+            } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
                 System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_WIN)));
             }
         } else if (isUnix()) {
-            if (isBrowserSetUpFor(BrowsersName.CHROME.name(), BROWSER)) {
+            if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
                 System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_UNIX)));
-            } else if (isBrowserSetUpFor(BrowsersName.FIREFOX.name(), BROWSER)) {
+            } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
                 System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_UNIX)));
             }
         }
@@ -52,26 +53,31 @@ public abstract class WebDriverTestBase {
     }
 
     private void initializeWebDriver() {
-        if (isBrowserSetUpFor(BrowsersName.CHROME.name(), BROWSER)) {
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--disable-extensions");
-            driver = new ChromeDriver();
-            desiredCapabilities.setBrowserName(BrowsersName.CHROME.name());
-        } else if (isBrowserSetUpFor(BrowsersName.FIREFOX.name(), BROWSER)) {
-            driver = new FirefoxDriver();
-            desiredCapabilities.setBrowserName(BrowsersName.FIREFOX.name());
+        try {
+            if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--disable-extensions");
+                driver = new ChromeDriver();
+                desiredCapabilities.setBrowserName(BrowserNames.CHROME.name());
+            } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
+                driver = new FirefoxDriver();
+                desiredCapabilities.setBrowserName(BrowserNames.FIREFOX.name());
+            }
+            driver.manage().window().maximize();
+            driver.manage().timeouts().setScriptTimeout(Integer.valueOf(getProperty(SCRIPT_TIMEOUT)), TimeUnit.SECONDS);
+            driver.manage().timeouts().pageLoadTimeout(Integer.valueOf(getProperty(LOAD_TIMEOUT)), TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Integer.valueOf(getProperty(IMPLICIT_WAIT)), TimeUnit.SECONDS);
+        } catch (WebDriverException e) {
+            System.out.println(e.getMessage());
+            WindowsUtils.killByName(desiredCapabilities.getBrowserName() + "driver" + (isWindows() ? ".exe" : ""));
         }
-        driver.manage().window().maximize();
-        driver.manage().timeouts().setScriptTimeout(Integer.valueOf(getProperty(SCRIPT_TIMEOUT)), TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(Integer.valueOf(getProperty(LOAD_TIMEOUT)), TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(Integer.valueOf(getProperty(IMPLICIT_WAIT)), TimeUnit.SECONDS);
     }
 
     @AfterClass
     public void tearDown() {
         //driver.manage().deleteAllCookies();
-        //driver.manage().deleteAllCookies();
-        //driver.quit();
+        driver.close();
+        driver.quit();
     }
 
     private boolean isBrowserSetUpFor(String browserName, String browserSystemVeriable) {
