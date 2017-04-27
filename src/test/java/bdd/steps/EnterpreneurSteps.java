@@ -32,7 +32,7 @@ public class EnterpreneurSteps {
     @Given("^I am on new project registration page \"([^\"]*)\"$")
     public void setup(String url) {
 //        System.setProperty("webdriver.gecko.driver", "C:\\KIT\\AboutTheCodeAutomationE2E\\e2e_automation\\src\\test\\resources\\geckodriver\\geckodriver.exe")
-        System.setProperty("webdriver.chrome.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\seleniumPractice\\src\\test\\resources\\browser_drivers\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "D:\\Dropbox\\Documents\\Books\\QA\\QA_automation\\GitHub\\seleniumPractice\\src\\test\\resources\\browserDrivers\\chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(url);
