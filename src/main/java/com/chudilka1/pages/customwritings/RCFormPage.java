@@ -77,7 +77,7 @@ public class RCFormPage extends AbstractPage {
     private By totalPriceSideWindowLocator = By.xpath(".//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[3]/div[2]/div[2]");
     private By payButtonSideWindowLocator = By.cssSelector(".OrderformCheckoutInfo__checkout-button.UIButton.UIButton-default-filled.UIButton-default-filled--size-l.UIButton-default-filled--color-primary");
     private By chosenPaymentMethodSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
-    private By paymentMenuSideWindowLocator = By.xpath(".//*[@id='react-select-8--value']/div[1]");
+    private By paymentMenuSideWindowLocator = By.xpath(".//*[@id='root']/div/div/div[2]/div/div/div/div[2]/div[4]/div/div/div/span[2]");
     private By payPalLocator = By.cssSelector(".payment-method-icon.payment-method-icon--g2s_paypal");
     private By creditCardLocator = By.cssSelector(".payment-method-icon.payment-method-icon--gate2shop");
     private By skrillLocator = By.cssSelector(".payment-method-icon.payment-method-icon--skrill");

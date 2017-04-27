@@ -20,6 +20,7 @@
         <jetty-maven-plugin>9.2.10.v20150310</jetty-maven-plugin>
         <allure.version>1.5.2</allure.version>
         <allure.plugin>2.2</allure.plugin>
+        <cucumber-version>1.2.5</cucumber-version>
     </properties>
 
     <dependencies>
@@ -48,6 +49,20 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Cucumber -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber-version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
