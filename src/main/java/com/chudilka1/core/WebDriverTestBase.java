@@ -9,8 +9,12 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.os.WindowsUtils;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Parameters;
+
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -26,30 +30,40 @@ public abstract class WebDriverTestBase {
     private static final String IMPLICIT_WAIT = "webdriver.implicit.wait";
     private static final String SCRIPT_TIMEOUT = "webdriver.script.timeout";
     private static final String LOAD_TIMEOUT = "webdriver.load.timeout";
+    private static final String GRID_URL = "grid.hub.url";
     private static final String OS = System.getProperty("os.name").toLowerCase();
     private static final String BROWSER = System.getProperty("browser");
+    private static final String TRIGGER = System.getProperty("trigger");
     //private static final Logger LOG = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     protected WebDriver driver;
     private List unixOSCodes = Arrays.asList("nix", "nux", "aix");
     private List windowsOSCodes = Arrays.asList("win");
     private DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 
+    @Parameters({"platform", "browser"})
     @BeforeSuite
-    public void setUp() {
-        if (isWindows()) {
-            if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
-                System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_WIN)));
-            } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
-                System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_WIN)));
-            }
-        } else if (isUnix()) {
-            if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
-                System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_UNIX)));
-            } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
-                System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_UNIX)));
-            }
+    public void setUp() throws MalformedURLException {
+        switch (localOrRemote()) {
+            case LOCAL:
+                if (isWindows()) {
+                    if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
+                        System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_WIN)));
+                    } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
+                        System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_WIN)));
+                    }
+                } else if (isUnix()) {
+                    if (isBrowserSetUpFor(BrowserNames.CHROME.name(), BROWSER)) {
+                        System.setProperty(getProperty(WEB_DRIVER_CHROME), getPath(getProperty(CHROME_PATH_UNIX)));
+                    } else if (isBrowserSetUpFor(BrowserNames.FIREFOX.name(), BROWSER)) {
+                        System.setProperty(getProperty(WEB_DRIVER_GECKO), getPath(getProperty(GECKO_DRIVER_PATH_UNIX)));
+                    }
+                }
+                initializeWebDriver();
+                break;
+            case REMOTE:
+                runGrid("", "");
+                break;
         }
-        initializeWebDriver();
     }
 
     private void initializeWebDriver() {
@@ -73,6 +87,20 @@ public abstract class WebDriverTestBase {
         }
     }
 
+    //register hub, console: java -jar selenium-server-standalone-3.4.0.jar -role hub
+    //register nodes, console: java -Dwebdriver.chrome.driver=chromedriver.exe -Dwebdriver.gecko.driver=geckodriver.exe -jar selenium-server-standalone-3.4.0.jar -role node -nodeConfig nodeConfig.json
+    private void runGrid(String platform, String browser) throws MalformedURLException {
+        DesiredCapabilities caps = new DesiredCapabilities();
+        if (platform.equalsIgnoreCase("Windows")) {
+            caps.setBrowserName(browser);
+        }
+        driver = new RemoteWebDriver(new URL(getProperty(GRID_URL)), caps);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().setScriptTimeout(Integer.valueOf(getProperty(SCRIPT_TIMEOUT)), TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(Integer.valueOf(getProperty(LOAD_TIMEOUT)), TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Integer.valueOf(getProperty(IMPLICIT_WAIT)), TimeUnit.SECONDS);
+    }
+
     @AfterClass
     public void tearDown() {
         //driver.manage().deleteAllCookies();
@@ -80,8 +108,19 @@ public abstract class WebDriverTestBase {
         driver.quit();
     }
 
-    private boolean isBrowserSetUpFor(String browserName, String browserSystemVeriable) {
-        return StringUtils.isEmpty(BROWSER) || browserName.equalsIgnoreCase(browserSystemVeriable);
+    private boolean isGrid(){
+        String value = "remote";
+        return value.equalsIgnoreCase(TRIGGER);
+    }
+
+    private RemoteLocalTrigger localOrRemote() {
+        if (isGrid()) {
+            return RemoteLocalTrigger.REMOTE;
+        } else return RemoteLocalTrigger.LOCAL;
+    }
+
+    private boolean isBrowserSetUpFor(String browserName, String browserSystemVariable) {
+        return StringUtils.isEmpty(BROWSER) || browserName.equalsIgnoreCase(browserSystemVariable);
     }
 
     private boolean isWindows() {
